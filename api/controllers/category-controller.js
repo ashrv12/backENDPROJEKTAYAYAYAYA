@@ -1,12 +1,12 @@
 const { sql } = require("../config/database");
 
-const transactions = async (req, res) => {
+const users = async (req, res) => {
   const result = await sql`select * from transactions`;
 
   res.json(result);
 };
 
-const createTransaction = async (req, res) => {
+const createUser = async (req, res) => {
   const { user_id, name, amount, transaction_type, description, category_id } =
     req.body;
   const response =
@@ -15,7 +15,7 @@ const createTransaction = async (req, res) => {
   res.json(response);
 };
 
-const updateTransaction = async (req, res) => {
+const updateUser = async (req, res) => {
   const { id } = req.params;
   const { name, email, password, avatar_img } = req.body;
 
@@ -24,7 +24,7 @@ const updateTransaction = async (req, res) => {
   res.json([{ writewas: "Successful" }]);
 };
 
-const deleteTransaction = async (req, res) => {
+const deleteUser = async (req, res) => {
   const { id } = req.params;
 
   await sql`select * from transactions`;
@@ -33,8 +33,8 @@ const deleteTransaction = async (req, res) => {
 };
 
 module.exports = {
-  transactions,
-  createTransaction,
-  updateTransaction,
-  deleteTransaction,
+  users,
+  createUser,
+  updateUser,
+  deleteUser,
 };
