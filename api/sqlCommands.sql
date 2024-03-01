@@ -10,16 +10,18 @@ CREATE TABLE users (
 )
 
 
+CREATE TYPE transaction_type_enum AS ENUM ('INC', 'EXP');
+
 CREATE TABLE transactions (
   id SERIAL PRIMARY KEY,
-  user_id SERIAL PRIMARY KEY,
+  user_id INTEGER,
   name TEXT,
   amount REAL NOT NULL,
-  transaction_type  AS ENUM ('INC', 'EXP'),
+  transaction_type transaction_type_enum,
   description TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  category_id SERIAL PRIMARY KEY
+  category_id INTEGER
 );
 
 insert into users (name, email, password, avatar_img) values(${name},${email},${password}, $(avatar_img))
