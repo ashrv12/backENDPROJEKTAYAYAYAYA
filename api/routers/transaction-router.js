@@ -9,9 +9,9 @@ const {
 
 const transactionRouter = express.Router();
 
-taskRouter.get("/", transactions);
-taskRouter.post("/create", createTransaction);
-taskRouter.put("/update/:id", updateTransaction);
-taskRouter.delete("/delete/:id", deleteTransaction);
+transactionRouter.get("/", transactions);
+transactionRouter.post("/create", createTransaction);
+transactionRouter.put("/update/:id", updateTransaction);
+transactionRouter.delete("/delete/:id", deleteTransaction);
 
 module.exports = transactionRouter;
