@@ -1,3 +1,4 @@
+import { House } from "@/assets/house";
 import { SoloLogo } from "@/assets/solologo";
 import Link from "next/link";
 
@@ -48,6 +49,18 @@ export default function Dashboard() {
             <div>
               <span>Here are the transactions \/</span>
             </div>
+            {/* start of transactions */}
+            <div className="bg-white w-full flex border rounded-xl justify-between items-center p-3">
+              <div className="flex justify-center items-center gap-x-4">
+                <input type="checkbox" className="checkbox" />
+                <House />
+                <div>
+                  <h1 className="font-bold">Title</h1>
+                  <h2 className="text-sm text-gray-500">00:00</h2>
+                </div>
+              </div>
+              <h1 className="font-bold text-cyan-900">Amount</h1>
+            </div>
           </div>
         </div>
         {/* dialog box */}
@@ -96,10 +109,22 @@ export default function Dashboard() {
                       className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full"
                     >
                       <li>
-                        <a>Item 1</a>
+                        <a>Home</a>
                       </li>
                       <li>
-                        <a>Item 2</a>
+                        <a>Gift</a>
+                      </li>
+                      <li>
+                        <a>Food</a>
+                      </li>
+                      <li>
+                        <a>Drink</a>
+                      </li>
+                      <li>
+                        <a>Taxi</a>
+                      </li>
+                      <li>
+                        <a>Shopping</a>
                       </li>
                     </ul>
                   </div>
