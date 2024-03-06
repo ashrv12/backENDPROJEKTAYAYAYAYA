@@ -1,4 +1,5 @@
 const { sql } = require("../config/database");
+const { v4: id } = require("uuid");
 
 const transactions = async (req, res) => {
   const result = await sql`select * from transactions`;
@@ -7,10 +8,25 @@ const transactions = async (req, res) => {
 };
 
 const createTransaction = async (req, res) => {
-  const { user_id, name, amount, transaction_type, description, category_id } =
-    req.body;
+  const {
+    user_id,
+    name,
+    amount,
+    transaction_type,
+    desc,
+    selectedOption,
+    date,
+    time,
+  } = req.body;
+
+  const real_amount = Number(amount);
+  let datentime = date + " " + time;
+  console.log(datentime);
+
   const response =
-    await sql`insert into transactions (user_id, name, amount, transaction_type, description, category_id) values(${user_id}, ${name}, ${amount}, ${transaction_type}, ${description}, ${category_id})`;
+    await sql`insert into transactions (id, user_id, name, amount, transaction_type, description, category_id, created_at) values(${id()},${user_id}, ${name}, ${real_amount}, ${transaction_type}, ${desc}, ${
+      selectedOption.value
+    }, ${datentime})`;
 
   res.json(response);
 };
