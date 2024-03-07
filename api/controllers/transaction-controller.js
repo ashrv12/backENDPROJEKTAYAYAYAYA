@@ -15,18 +15,15 @@ const createTransaction = async (req, res) => {
     transaction_type,
     desc,
     selectedOption,
-    date,
-    time,
+    datetime,
   } = req.body;
 
   const real_amount = Number(amount);
-  let datentime = date + " " + time;
-  console.log(datentime);
 
   const response =
     await sql`insert into transactions (id, user_id, name, amount, transaction_type, description, category_id, created_at) values(${id()},${user_id}, ${name}, ${real_amount}, ${transaction_type}, ${desc}, ${
       selectedOption.value
-    }, ${datentime})`;
+    }, ${datetime})`;
 
   res.json(response);
 };
@@ -43,8 +40,9 @@ const updateTransaction = async (req, res) => {
 const deleteTransaction = async (req, res) => {
   const { id } = req.params;
 
-  await sql`select * from transactions`;
+  await sql`delete from transactions where id = ${id}`;
 
+  console.log(id);
   res.json([{ status: "succ" }]);
 };
 

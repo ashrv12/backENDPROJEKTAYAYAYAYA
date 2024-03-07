@@ -1,10 +1,10 @@
 import { House } from "@/assets/house";
-import { SoloLogo } from "@/assets/solologo";
-import Link from "next/link";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import Select from "react-select";
+import { DashHead } from "./components/dashHead";
+import dayjs from "dayjs";
 
 export default function Dashboard() {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -49,15 +49,15 @@ export default function Dashboard() {
     fetchCategories();
   }, []);
 
-  const fetchCategories = () => {
-    axios.get("http://localhost:4000/category").then((response) => {
-      setCategory(response.data);
-    });
-  };
-
   const fetchTransactions = () => {
     axios.get("http://localhost:4000/transaction").then((response) => {
       setTransaction(response.data);
+    });
+  };
+
+  const fetchCategories = () => {
+    axios.get("http://localhost:4000/category").then((response) => {
+      setCategory(response.data);
     });
   };
 
@@ -73,14 +73,15 @@ export default function Dashboard() {
   // creating new transaction
 
   const newTransaction = async () => {
+    const datetime = new Date(`${date}T${time}`);
+
     try {
       await axios.post("http://localhost:4000/transaction/create", {
         user_id,
         amount,
         name,
         desc,
-        date,
-        time,
+        datetime,
         selectedOption,
         transaction_type,
       });
@@ -89,7 +90,18 @@ export default function Dashboard() {
       setDesc("");
       setDate("");
       setTime("");
-      // setCategory(undefined);
+      setCategory("");
+      fetchTransactions();
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error");
+    }
+  };
+
+  // delete a transaction
+  const deleteTransaction = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/transaction/delete/${id}`);
       fetchTransactions();
     } catch (error) {
       console.error("Error:", error);
@@ -100,28 +112,7 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col h-screen">
       {/* background color */}
-      <div>
-        <main className="container mx-auto">
-          {/* navbar */}
-          <div className="flex justify-between items-center py-3">
-            <div className="flex items-center gap-x-5">
-              <SoloLogo />
-              <Link className="text-lg" href="#">
-                Dashboard
-              </Link>
-              <Link className="text-lg font-bold" href="#">
-                Records
-              </Link>
-            </div>
-            <div className="flex items-center gap-x-5">
-              <button className="btn btn-sm font-thin rounded-full h-[32px] w-[100px] bg-blue-700 text-slate-50">
-                + Record
-              </button>
-              <img src="/klee.png" className="h-[40px] w-[40px] rounded-full" />
-            </div>
-          </div>
-        </main>
-      </div>
+      <DashHead />
 
       {/* background color */}
       <div className="bg-gray-100 flex-grow">
@@ -139,30 +130,16 @@ export default function Dashboard() {
             </button>
           </div>
           <div className="mt-4 col-span-3">
-            <div>HELLO</div>
-            <div>
-              <span>Here are the transactions \/</span>
-            </div>
             {/* start of transactions */}
-            <div className="bg-white w-full flex border rounded-xl justify-between items-center p-3">
-              <div className="flex justify-center items-center gap-x-4">
-                <input type="checkbox" className="checkbox" />
-                <House />
-                <div>
-                  <h1 className="font-bold">Title</h1>
-                  <h2 className="text-sm text-gray-500">00:00</h2>
-                </div>
-              </div>
-              <h1 className="font-bold text-cyan-900">Amount</h1>
-            </div>
             {transaction.map((transaction) => (
               <div className="bg-white w-full flex border rounded-xl justify-between items-center p-3 mt-1">
                 <div className="flex justify-center items-center gap-x-4">
-                  <input
-                    value={transaction.id}
-                    type="checkbox"
-                    className="checkbox"
-                  />
+                  <button
+                    className="btn btn-sm bg-red-500"
+                    onClick={() => deleteTransaction(transaction.id)}
+                  >
+                    X
+                  </button>
                   <House />
                   <div>
                     <h1 className="font-bold">{transaction.name}</h1>
