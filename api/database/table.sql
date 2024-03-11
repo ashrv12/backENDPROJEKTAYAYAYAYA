@@ -57,3 +57,4 @@ insert into transactions(id, amount, category_id) values('10', 10000, '2')
 insert into transactions(id, amount, category_id) values('15', 10000, '4')
 
 select transactions.id, amount, category_id, categories.name category_name from transactions left join categories on transactions.category_id = categories.id
+SELECT user_id, amount, name, description, category_id, created_at, updated_at FROM transactions;

@@ -30,9 +30,11 @@ const createTransaction = async (req, res) => {
 
 const updateTransaction = async (req, res) => {
   const { id } = req.params;
-  const { name, email, password, avatar_img } = req.body;
+  const { amount, name, datetime, desc, selectedOption } = req.body;
 
-  await sql`select * from transactions`;
+  const real_amount = Number(amount);
+
+  await sql`update transactions set (amount, name, updated_at, description, category_id) = (${real_amount}, ${name}, ${datetime}, ${desc}, ${selectedOption.value}) where id = ${id}`;
 
   res.json([{ writewas: "Successful" }]);
 };
