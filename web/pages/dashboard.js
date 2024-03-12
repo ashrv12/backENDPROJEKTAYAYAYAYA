@@ -21,24 +21,24 @@ export default function Dashboard() {
   const [transaction_type, setType] = useState("EXP");
 
   // onchanges
-  const changeAmount = (e) => {
-    setAmount(e.target.value);
+  const changeAmount = (event) => {
+    setAmount(event.target.value);
   };
 
-  const changeDate = (e) => {
-    setDate(e.target.value);
+  const changeDate = (event) => {
+    setDate(event.target.value);
   };
 
-  const changeTime = (e) => {
-    setTime(e.target.value);
+  const changeTime = (event) => {
+    setTime(event.target.value);
   };
 
-  const changeName = (e) => {
-    setName(e.target.value);
+  const changeName = (event) => {
+    setName(event.target.value);
   };
 
-  const changeDesc = (e) => {
-    setDesc(e.target.value);
+  const changeDesc = (event) => {
+    setDesc(event.target.value);
   };
 
   // user id

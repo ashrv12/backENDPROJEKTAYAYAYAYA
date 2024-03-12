@@ -3,8 +3,16 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 import { GeldLogo } from "@/assets/logo";
+import { useState } from "react";
 
 export default function Home() {
+  // const [email, setEmail] = useState[""];
+  // const [pass, setPass] = useState[""];
+
+  // function handleSubmit() {
+  //   axios.post
+  // }
+
   return (
     <main className="w-screen h-screen flex">
       <div className="w-1/2 h-full flex justify-center items-center">
