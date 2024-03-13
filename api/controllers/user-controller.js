@@ -1,4 +1,5 @@
 const { sql } = require("../config/database");
+const { v4: id } = require("uuid");
 
 const users = async (req, res) => {
   const result = await sql`select * from users`;
@@ -7,10 +8,11 @@ const users = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-  const { user_id, name, amount, transaction_type, description, category_id } =
-    req.body;
+  const { name, email, password } = req.body;
+
+  console.log({ name, email });
   const response =
-    await sql`insert into users (user_id, name, amount, transaction_type, description, category_id) values(${user_id}, ${name}, ${amount}, ${transaction_type}, ${description}, ${category_id})`;
+    await sql`insert into users (user_id, name, email, password) values(${id()}, ${name}, ${email}, ${password})`;
 
   res.json(response);
 };

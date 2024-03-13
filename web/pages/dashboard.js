@@ -17,8 +17,16 @@ export default function Dashboard() {
   const [date, setDate] = useState("");
   const [desc, setDesc] = useState("");
   const [time, setTime] = useState("");
+
+  // error message
+  const [error, setError] = useState("");
+
+  // need to fix these or add the expense and income button
   const [user_id, setUser] = useState("admin");
   const [transaction_type, setType] = useState("EXP");
+
+  // cooking
+  const [updateDatetime, setUpdatedatetime] = useState("");
 
   // onchanges
   const changeAmount = (event) => {
@@ -64,8 +72,6 @@ export default function Dashboard() {
 
   // mapping categories to select
 
-  console.log({ category });
-
   const options = category.map((category) => {
     return {
       value: category.id,
@@ -79,12 +85,18 @@ export default function Dashboard() {
     const datetime = new Date(`${date}T${time}`);
 
     if (
-      amount === undefined ||
-      name === undefined ||
-      desc === undefined ||
-      datetime === undefined ||
-      selectedOption === undefined
+      amount === null ||
+      name === null ||
+      desc === null ||
+      datetime === null ||
+      selectedOption === null ||
+      amount === "" ||
+      name === "" ||
+      desc === "" ||
+      datetime === "" ||
+      selectedOption === ""
     ) {
+      setError("Please fill all required fields");
       return;
     } else {
       try {
@@ -102,6 +114,7 @@ export default function Dashboard() {
         setDesc("");
         setDate("");
         setTime("");
+        setError("");
         fetchTransactions();
         document.getElementById("my_modal_3").close();
       } catch (error) {
@@ -110,23 +123,45 @@ export default function Dashboard() {
       }
     }
   };
-
+  const openRecordadder = () => {
+    setAmount("");
+    setName("");
+    setDesc("");
+    setDate("");
+    setTime("");
+    setError("");
+    document.getElementById("my_modal_3").showModal();
+    console.log({ transaction });
+  };
   // updating transaction
-  const openUpdate = (id) => {
+  const openUpdate = (transaction) => {
     document.getElementById("my_modal_2").showModal();
-    setEditId(id);
+    setAmount(transaction.amount);
+    setName(transaction.name);
+    setDesc(transaction.description);
+    setEditId(transaction.id);
+    // parsing the date
+    const parsedDatetime = dayjs(transaction.updated_at);
+    const formattedDatetime = parsedDatetime.format("YYYY/MM/DD HH:mm:ss");
+    setUpdatedatetime(formattedDatetime);
   };
 
   const updateTransaction = async () => {
     const datetime = new Date(`${date}T${time}`);
 
     if (
-      amount === undefined ||
-      name === undefined ||
-      desc === undefined ||
-      datetime === undefined ||
-      selectedOption === undefined
+      amount === null ||
+      name === null ||
+      desc === null ||
+      datetime === null ||
+      selectedOption === null ||
+      amount === "" ||
+      name === "" ||
+      desc === "" ||
+      datetime === "" ||
+      selectedOption === ""
     ) {
+      setError("Please fill all required fields");
       return;
     } else {
       try {
@@ -139,13 +174,17 @@ export default function Dashboard() {
           selectedOption,
           transaction_type,
         });
-        setAmount("");
+        // resetting the fields
+        setAmount(null);
         setName("");
         setDesc("");
         setDate("");
         setTime("");
+        setUpdatedatetime(null);
         fetchTransactions();
         setEditId("");
+        // resetting error message
+        setError("");
         document.getElementById("my_modal_2").close();
       } catch (error) {
         console.error("Error:", error);
@@ -180,7 +219,7 @@ export default function Dashboard() {
             </div>
             <button
               className="my-2 btn btn-sm font-thin rounded-full h-[32px] w-11/12 bg-blue-700 text-slate-50"
-              onClick={() => document.getElementById("my_modal_3").showModal()}
+              onClick={openRecordadder}
             >
               + ADD
             </button>
@@ -199,7 +238,7 @@ export default function Dashboard() {
                     </button>
                     <button
                       className="btn btn-sm bg-yellow-500"
-                      onClick={() => openUpdate(transaction.id)}
+                      onClick={() => openUpdate(transaction)}
                     >
                       /\
                     </button>
@@ -209,18 +248,20 @@ export default function Dashboard() {
                   <div>
                     <h1 className="font-bold">{transaction.name}</h1>
                     <h2 className="text-sm text-gray-500">
-                      {transaction.created_at}
+                      {dayjs(transaction.updated_at).format(
+                        "YYYY/MM/DD HH:mm:ss Z"
+                      )}
                     </h2>
                   </div>
                 </div>
                 <h1 className="font-bold text-cyan-900">
-                  {transaction.amount}
+                  ₮{transaction.amount}
                 </h1>
               </div>
             ))}
           </div>
         </div>
-        {/* dialog box */}
+        {/* dialog box for adding */}
         <dialog id="my_modal_3" className="modal">
           <div className="modal-box max-w-4xl max-h-none">
             <form method="dialog">
@@ -246,6 +287,8 @@ export default function Dashboard() {
                   <span className="font-thin text-lg">Amount</span>
                   <input
                     type="number"
+                    min="1"
+                    step="any"
                     placeholder="₮ 0.00"
                     className="placeholder:text-xl w-11/12 h-[28px] bg-gray-100"
                     value={amount}
@@ -282,6 +325,7 @@ export default function Dashboard() {
                     />
                   </div>
                 </div>
+                <h1 className="text-red-700">{error}</h1>
                 <button
                   className="my-2 btn btn-sm font-thin rounded-full h-[32px] w-full bg-blue-700 text-slate-50"
                   onClick={newTransaction}
@@ -343,6 +387,8 @@ export default function Dashboard() {
                   <input
                     type="number"
                     placeholder="₮ 0.00"
+                    min="1"
+                    step="any"
                     className="placeholder:text-xl w-11/12 h-[28px] bg-gray-100"
                     value={amount}
                     onChange={changeAmount}
@@ -378,6 +424,10 @@ export default function Dashboard() {
                     />
                   </div>
                 </div>
+                <h1 className="text-red-700">{error}</h1>
+                <h1 className="text-black">
+                  Previous date was: {updateDatetime}
+                </h1>
                 <button
                   className="my-2 btn btn-sm font-thin rounded-full h-[32px] w-full bg-blue-700 text-slate-50"
                   onClick={updateTransaction}

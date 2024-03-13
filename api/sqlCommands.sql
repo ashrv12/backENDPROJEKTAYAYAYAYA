@@ -27,3 +27,7 @@ CREATE TABLE transactions (
 insert into users (name, email, password, avatar_img) values(${name},${email},${password}, $(avatar_img))
 
 insert into transactions (user_id, name, amount, transaction_type, description, category_id) values(${user_id},${name},${amount}, ${transaction_type}, ${description}, ${category_id})
+
+
+-- how to change a column inside a table
+ALTER TABLE foog ALTER COLUMN a TYPE varchar(30);
