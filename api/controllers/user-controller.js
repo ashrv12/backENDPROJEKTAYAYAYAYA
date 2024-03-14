@@ -1,5 +1,6 @@
 const { sql } = require("../config/database");
 const { v4: id } = require("uuid");
+const bcrypt = require("bcryptjs");
 
 const users = async (req, res) => {
   const result = await sql`select * from users`;
@@ -10,11 +11,17 @@ const users = async (req, res) => {
 const createUser = async (req, res) => {
   const { name, email, password } = req.body;
 
-  console.log({ name, email });
-  const response =
-    await sql`insert into users (user_id, name, email, password) values(${id()}, ${name}, ${email}, ${password})`;
+  const users = await sql`select * from users where email=${email}`;
 
-  res.json(response);
+  if (users.length > 0) {
+    res.status(400).json({ message: "Email is already in use." });
+    return;
+  } else {
+    const hash = bcrypt.hashSync(password, 8);
+    await sql`insert into users (user_id, name, email, password) values(${id()}, ${name}, ${email}, ${hash})`;
+
+    res.json({ message: "Successfully registered" });
+  }
 };
 
 const updateUser = async (req, res) => {

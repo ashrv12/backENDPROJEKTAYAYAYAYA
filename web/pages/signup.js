@@ -9,6 +9,7 @@ export default function Newaccount() {
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState({});
 
   // onchanges
   const changeName = (event) => {
@@ -46,15 +47,22 @@ export default function Newaccount() {
       if (password !== repassword) {
         setError("Passwords are mismatched");
         return;
+      } else if (password.length < 8) {
+        setError("Password is too short");
+        return;
       } else {
         // reset error
         setError("");
         try {
-          await axios.post("http://localhost:4000/user/create", {
-            name,
-            email,
-            password,
-          });
+          await axios
+            .post("http://localhost:4000/user/create", {
+              name,
+              email,
+              password,
+            })
+            .then((data) => {
+              setMessage(data.message);
+            });
           setName("");
           setEmail("");
           setPassword("");
@@ -112,7 +120,10 @@ export default function Newaccount() {
           >
             Sign Up
           </button>
-          <h1 className="text-red-700">{error}</h1>
+          <h1 className="text-red-700">
+            {error}
+            {message}
+          </h1>
           <div className="flex justify-center items-center">
             <h1 className="m-0">Already have an account?</h1>
             <Link href="/" className="btn btn-link">

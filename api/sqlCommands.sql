@@ -30,4 +30,4 @@ insert into transactions (user_id, name, amount, transaction_type, description, 
 
 
 -- how to change a column inside a table
-ALTER TABLE foog ALTER COLUMN a TYPE varchar(30);
+ALTER TABLE transactions ALTER COLUMN id TYPE varchar(50);
