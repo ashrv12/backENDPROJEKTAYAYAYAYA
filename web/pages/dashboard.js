@@ -11,6 +11,7 @@ export default function Dashboard() {
   const [transaction, setTransaction] = useState([]);
   const [category, setCategory] = useState([]);
   const [editId, setEditId] = useState("");
+  const [delId, setDelId] = useState("");
   // start of add
   const [amount, setAmount] = useState("");
   const [name, setName] = useState("");
@@ -194,14 +195,24 @@ export default function Dashboard() {
   };
 
   // delete a transaction
-  const deleteTransaction = async (id) => {
+  const openDeleteAlert = async (id) => {
+    document.getElementById("my_modal_del").showModal();
+    setDelId(id);
+  };
+
+  const closeAlert = () => {
+    document.getElementById("my_modal_del").close();
+  };
+
+  const deleteTransaction = async () => {
     try {
-      await axios.delete(`http://localhost:4000/transaction/delete/${id}`);
+      await axios.delete(`http://localhost:4000/transaction/delete/${delId}`);
       fetchTransactions();
     } catch (error) {
       console.error("Error:", error);
       alert("Error");
     }
+    document.getElementById("my_modal_del").close();
   };
 
   return (
@@ -232,7 +243,9 @@ export default function Dashboard() {
                   <div>
                     <button
                       className="btn btn-sm bg-red-500"
-                      onClick={() => deleteTransaction(transaction.id)}
+                      onClick={() => openDeleteAlert(transaction.id)}
+                      // onClick={() => deleteTransaction(transaction.id)}
+                      // onClick={() => document.getElementById("my_modal_del").showModal()}
                     >
                       X
                     </button>
@@ -261,8 +274,43 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
+        {/* alert box for delete */}
+        <dialog id="my_modal_del" className="modal">
+          <div className="modal-box bg-red-400/0">
+            <div role="alert" className="alert alert-error">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="stroke-current shrink-0 h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>Are you sure you want to delete this transaction?</span>
+              <div className="flex gap-x-1">
+                <button
+                  className="btn btn-sm btn-neutral"
+                  onClick={deleteTransaction}
+                >
+                  Accept
+                </button>
+                <button className="btn btn-sm" onClick={closeAlert}>
+                  Deny
+                </button>
+              </div>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+        </dialog>
         {/* dialog box for adding */}
-        <dialog id="my_modal_3" className="modal">
+        <dialog id="my_modal_3" className="modal overflow-visible">
           <div className="modal-box max-w-4xl max-h-none">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
